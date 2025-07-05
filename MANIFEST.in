@@ -1,0 +1,30 @@
+# Include the C++ source directory
+graft src
+
+# Include the Python package directory
+graft python
+
+# Include CMake build script
+include CMakeLists.txt
+
+# Include essential project files
+include README.md
+include AGENTS.md
+include requirements.txt
+# include LICENSE # Uncomment if a LICENSE file is added
+
+# Include example scripts
+graft examples
+
+# Include test files (optional for sdist, but can be useful)
+# graft tests
+
+# Recursive include for all files under src and python (alternative to graft)
+# recursive-include src *
+# recursive-include python *
+
+# Exclude compiled Python files and build artifacts from sdist
+global-exclude *.py[cod] __pycache__ *.so *.pyd
+prune build
+prune dist
+prune *.egg-info

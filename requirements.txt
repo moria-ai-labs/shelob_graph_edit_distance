@@ -1,0 +1,15 @@
+# Core binding library
+pybind11>=2.6
+
+# For testing
+pytest>=6.0
+
+# Optional: for C++ testing framework if installed via pip for some reason
+# (usually handled by CMake or system package manager)
+# googletest
+# catch2
+
+# Linters/Formatters (development dependencies)
+flake8
+black
+isort

@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.env
+*.venv
+env/
+venv/
+
+# C++
+*.o
+*.obj
+*.out
+*.exe
+*.dll
+*.lib
+*.dylib
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# Build artifacts
+**/build/
+**/dist/
+*.egg-info/
+
+# pybind11
+*.pb.cc
+*.pb.h
+
+# Testing
+.pytest_cache/
+coverage.xml
+htmlcov/
+.coverage
