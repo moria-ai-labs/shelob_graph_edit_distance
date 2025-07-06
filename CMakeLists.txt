@@ -46,7 +46,7 @@ target_include_directories(graph_edit_distance_cpp PRIVATE
     ${pybind11_INCLUDE_DIRS} # From pybind11
     # ${PYTHON_INCLUDE_DIRS} # Usually included via pybind11_INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/src" # To find Graph.h
-    ${EIGEN3_INCLUDE_DIR} # For Eigen library
+    # Eigen include directory should be handled by linking Eigen3::Eigen
 )
 
 # If pybind11 is built as a static library or shared library (less common for header-only usage)
@@ -55,6 +55,7 @@ target_include_directories(graph_edit_distance_cpp PRIVATE
 target_link_libraries(graph_edit_distance_cpp PRIVATE
     ${pybind11_LIBRARIES} # Includes pybind11::module or pybind11::embed
     # ${PYTHON_LIBRARIES} # Usually included via pybind11_LIBRARIES
+    Eigen3::Eigen       # Link against Eigen3 target for include dirs and properties
 )
 
 # Set properties for Python module
