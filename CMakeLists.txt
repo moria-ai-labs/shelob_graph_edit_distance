@@ -128,27 +128,50 @@ endif()
 # --- End Eigen3 library ---
 
 
-# Define C++ tests if the test source directory exists
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/cpp/test_graph.cpp") # Check for a specific file or just dir
-    add_executable(cpp_tests
-        tests/cpp/test_graph.cpp
-        tests/cpp/test_ged_algorithm.cpp
-        tests/cpp/test_graph_algos.cpp # New test file
-        src/Graph.cpp          # Link Graph implementation
-        src/GEDAlgorithm.cpp   # Link GEDAlgorithm implementation
-        src/GraphAlgos.cpp     # Link GraphAlgos implementation
-    )
-    target_link_libraries(cpp_tests PRIVATE GTest::gtest GTest::gtest_main Eigen3::Eigen)
-     target_include_directories(cpp_tests PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
-        ${EIGEN3_INCLUDE_DIR} # For Eigen library
-     )
+# Define C++ tests
+set(CPP_TEST_SOURCES "") # Initialize empty list of sources
+set(MAIN_TEST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/tests/cpp/test_graph.cpp")
 
-    include(GoogleTest)
-    gtest_discover_tests(cpp_tests)
-    message(STATUS "C++ tests configured.")
+if(EXISTS ${MAIN_TEST_FILE})
+    list(APPEND CPP_TEST_SOURCES ${MAIN_TEST_FILE})
+
+    # List of other C++ test files; they will be added if they exist
+    set(OPTIONAL_TEST_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/cpp/test_ged_algorithm.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/cpp/test_graph_algos.cpp"
+    )
+    foreach(FILE_PATH ${OPTIONAL_TEST_FILES})
+        if(EXISTS ${FILE_PATH})
+            list(APPEND CPP_TEST_SOURCES ${FILE_PATH})
+            message(STATUS "Adding C++ test source file: ${FILE_PATH}")
+        else()
+            message(WARNING "Optional C++ test source file not found, will be skipped: ${FILE_PATH}")
+        endif()
+    endforeach()
+
+    # Add implementation files needed by tests
+    # Ensure these paths are correct relative to CMAKE_CURRENT_SOURCE_DIR
+    list(APPEND CPP_TEST_SOURCES
+        "src/Graph.cpp"
+        "src/GEDAlgorithm.cpp"
+        "src/GraphAlgos.cpp"
+    )
+
+    add_executable(cpp_tests ${CPP_TEST_SOURCES})
+    target_link_libraries(cpp_tests PRIVATE GTest::gtest GTest::gtest_main Eigen3::Eigen)
+    target_include_directories(cpp_tests PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"  # For Graph.h, EditCosts.h etc.
+        # EIGEN3_INCLUDE_DIR should be handled by linking Eigen3::Eigen target
+        # If Eigen3::Eigen target doesn't propagate include dirs correctly, may need:
+        # ${EIGEN3_INCLUDE_DIR}
+    )
+
+    include(GoogleTest) # Must be after add_executable and target_link_libraries with GTest
+    gtest_discover_tests(cpp_tests) # Automatically discover tests from cpp_tests executable
+    message(STATUS "C++ tests configured with sources: ${CPP_TEST_SOURCES}")
+
 else()
-    message(WARNING "C++ test file (e.g., tests/cpp/test_graph.cpp) not found. Skipping C++ test configuration.")
+    message(WARNING "Main C++ test file (${MAIN_TEST_FILE}) not found. Skipping C++ test configuration.")
 endif()
 
 

@@ -110,8 +110,11 @@ setup(
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     python_requires=">=3.7",
-    install_requires=[
+    setup_requires=[ # pybind11 is needed to build, not just at runtime by final user
         "pybind11>=2.6"
+    ],
+    install_requires=[ # For users of the library, pybind11 might not be strictly needed if they just run compiled code
+        "pybind11>=2.6" # Keep for now, or decide if only build-time
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
